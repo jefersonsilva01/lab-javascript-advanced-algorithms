@@ -10,36 +10,74 @@ const dequeue = document.querySelector('.btn-take-dequeue');
 const queue = new Queue();
 
 const clearQueueInput = () => {
-  // ... your code goes here
+  const input = document.getElementById('queue-input');
+  input.value = null;
 };
 
 const generateListQueue = () => {
-  // ... your code goes here
+  const size = queue.MAX_SIZE;
+  const queueControl = queue.queueControl;
+  const ulQueue = document.getElementById('queue-list');
+
+  ulQueue.innerHTML = '';
+
+  for (let i = 0; i < queueControl.length; i++) {
+    const li = document.createElement('li');
+
+    li.setAttribute('class', 'active');
+    li.innerHTML = queueControl[i];
+    ulQueue.prepend(li);
+  };
+
+  for (let i = 0; i < size - queueControl.length; i++) {
+    const li = document.createElement('li');
+
+    li.setAttribute('class', 'inactive');
+    li.innerHTML = '&nbsp';
+    ulQueue.appendChild(li);
+  }
 };
 
 generateListQueue();
 
 const generateWarningQueue = (type) => {
-  if (type === 'underflow') {
-    // ... your code goes here
-  } else if (type === 'overflow') {
-    // ... your code goes here
+  if (type === 'overflow') {
+    warningTopQueue.style.display = 'block';
+    warningTopQueue.innerHTML = type;
+  } else if (type === 'underflow') {
+    warningBottomQueue.style.display = 'block';
+    warningBottomQueue.innerHTML = type;
   }
 };
 
 const addToQueue = () => {
   try {
-    // ... your code goes here
+    const item = document.getElementById('queue-input').value;
+
+    if (item) {
+      queue.enqueue(item);
+    } else {
+      queue.enqueue("");
+    }
+
+    if (warningBottomQueue.style.display === 'block') warningBottomQueue.style.display = 'none';
+
+    clearQueueInput();
+    generateListQueue();
   } catch (error) {
-    // there was an overflow error, handle it
+    generateWarningQueue('overflow');
   }
 };
 
 const removeFromQueue = () => {
   try {
-    // ... your code goes here
+    queue.dequeue();
+
+    if (warningTopQueue.style.display === 'block') warningTopQueue.style.display = 'none';
+
+    generateListQueue();
   } catch (error) {
-    // there was an underflow error, handle it
+    generateWarningQueue('underflow');
   }
 };
 
